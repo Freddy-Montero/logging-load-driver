@@ -50,15 +50,15 @@ parameters:
 - description: The limit of CPU to allow for a build or deployment
   name: CPU_LIMIT
   required: true
-  value: "2000m"
+  value: "500m"
 - description: The requested memory for a build or deployment
   name: MEM_REQUEST
   required: true
-  value: "1600Mi"
+  value: "1000Mi"
 - description: The limit of memory to allow for a build or deployment
   name: MEM_LIMIT
   required: true
-  value: "1600Mi"
+  value: "1000Mi"
 - description: Version of deployment
   name: VERSION_NUMBER
   required: true
