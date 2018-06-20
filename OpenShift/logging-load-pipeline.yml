@@ -12,7 +12,7 @@ parameters:
 - description: Logging Load Driver Application source BRANCH
   name: GIT_REPO_BRANCH
   required: true
-  value: master
+  value: testing
 - description: What commit to use from GIT
   name: GIT_COMMIT
   required: true
