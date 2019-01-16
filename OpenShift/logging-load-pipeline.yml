@@ -5,6 +5,9 @@ labels:
 metadata:
   name: logging-load-driver-pipeline
 parameters:
+- description: Project Name where application resides
+  name: PROJECT_NAME
+  required: true
 - description: Logging Load Driver Application source URI
   name: GIT_REPO_URL
   required: true
@@ -83,7 +86,7 @@ objects:
         jenkinsfile: |-
           try {
              timeout(time: 15, unit: 'MINUTES') {
-                def project = ""
+                def project = "${PROJECT_NAME}"
                     def gitURL = "${GIT_REPO_URL}"
                     def gitBranch = "${GIT_REPO_BRANCH}"
                     def gitCommit = "${GIT_COMMIT}"
@@ -98,7 +101,7 @@ objects:
                     def replicas = "${NUM_REPLICAS}"
                     def version = "${VERSION_NUMBER}"
                 node {
-                  project = "${env.PROJECT_NAME}"
+                  project = "${PROJECT_NAME}"
 
                   stage('Create BuildConfig logging-load-build') {
              checkout([$class: "GitSCM", branches: [[name: "*/${gitBranch}"]], doGenerateSubmoduleConfigurations: false, extensions: [[$class: "RelativeTargetDirectory", relativeTargetDir: "${gitContext}"]], submoduleCfg: [], userRemoteConfigs: [[url: "${gitURL}"]]])
