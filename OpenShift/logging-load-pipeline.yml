@@ -91,6 +91,7 @@ objects:
                     def gitBranch = "${GIT_REPO_BRANCH}"
                     def gitCommit = "${GIT_COMMIT}"
                     def gitContext = "${GIT_CONTEXT_DIR}"
+                    def gitSecret = "${GITHUB_SECRET}"
                     def microName = "${MICROSERVICE_NAME}"
                     def appName = "${APPLICATION_NAME}"
                     def appID = "${APPLICATION_ID}"
@@ -111,6 +112,14 @@ objects:
                   stage('Create DeploymentConfig logging-load-driver') {
              checkout([$class: "GitSCM", branches: [[name: "*/${gitBranch}"]], doGenerateSubmoduleConfigurations: false, extensions: [[$class: "RelativeTargetDirectory", relativeTargetDir: "${gitContext}"]], submoduleCfg: [], userRemoteConfigs: [[url: "${gitURL}"]]])
                sh "oc new-app -f OpenShift/templates/deploy-template.json -p GIT_COMMIT=${gitCommit} -p MICROSERVICE_NAME=${microName} -p APPLICATION_NAME=${appName} -p APPLICATION_ID=${appID} -p DEPLOY_CPU_REQUEST=${cpuRequest} -p DEPLOY_CPU_LIMIT=${cpuLimit} -p DEPLOY_MEM_REQUEST=${memRequest} -p DEPLOY_MEM_LIMIT=${memLimit} -p VERSION_NUMBER=${version} -p NUM_REPLICAS=0 -n ${project} --dry-run -o yaml | oc apply -f - -n ${project}"
+                  }
+                  
+                  stage('Create ImageStream logging-load-driver') {
+               sh "oc create is ${appName} -n ${project}"
+                  }
+                  
+                  stage('Create Git Secret logging-load-driver') {
+               sh "oc create secret generic gitsecret --type="kubernetes.io/basic-auth" --from-literal=username=supersecret --from-literal=password=${gitSecret} -n ${project}"
                   }
                 }
 
